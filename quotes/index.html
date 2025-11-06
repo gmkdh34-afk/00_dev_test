@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오늘의 명언</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nanum Myeongjo', 'Georgia', 'Times New Roman', serif;
+            background: #e8dcc4;
+            background-image:
+                linear-gradient(45deg, transparent 48%, rgba(139, 105, 60, 0.02) 48%, rgba(139, 105, 60, 0.02) 52%, transparent 52%),
+                linear-gradient(-45deg, transparent 48%, rgba(139, 105, 60, 0.02) 48%, rgba(139, 105, 60, 0.02) 52%, transparent 52%),
+                radial-gradient(circle, rgba(139, 105, 60, 0.08) 1px, transparent 1px);
+            background-size: 3px 3px, 3px 3px, 2px 2px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                repeating-linear-gradient(0deg, rgba(0,0,0,0.01) 0px, transparent 1px, transparent 2px, rgba(0,0,0,0.01) 3px),
+                repeating-linear-gradient(90deg, rgba(0,0,0,0.01) 0px, transparent 1px, transparent 2px, rgba(0,0,0,0.01) 3px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            text-align: center;
+            color: #5a4a3a;
+            font-size: 2.8rem;
+            margin-bottom: 40px;
+            text-shadow: 1px 1px 2px rgba(139, 105, 60, 0.3);
+            font-weight: 400;
+            letter-spacing: 3px;
+        }
+
+        .quote-container {
+            background: #f5ede0;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(139, 105, 60, 0.1) 31px, rgba(139, 105, 60, 0.1) 32px);
+            border: 2px solid #c9b896;
+            border-radius: 3px;
+            padding: 50px 40px;
+            margin-bottom: 40px;
+            box-shadow:
+                0 2px 8px rgba(90, 74, 58, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                0 0 0 1px rgba(139, 105, 60, 0.1);
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .quote-container::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 3px;
+            height: calc(100% - 40px);
+            background: rgba(220, 80, 80, 0.3);
+            border-radius: 1px;
+        }
+
+        .quote-text {
+            font-size: 1.6rem;
+            line-height: 2;
+            color: #3d3226;
+            margin-bottom: 20px;
+            font-style: italic;
+            text-align: center;
+            font-weight: 300;
+        }
+
+        .quote-text::before {
+            content: '"';
+            font-size: 2.5rem;
+            color: #8b6f47;
+            opacity: 0.6;
+        }
+
+        .quote-text::after {
+            content: '"';
+            font-size: 2.5rem;
+            color: #8b6f47;
+            opacity: 0.6;
+        }
+
+        .quote-author {
+            text-align: right;
+            font-size: 1.2rem;
+            color: #5a4a3a;
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        .quote-author::before {
+            content: '— ';
+        }
+
+        .calendar-container {
+            background: #f5ede0;
+            border: 2px solid #c9b896;
+            border-radius: 3px;
+            padding: 30px;
+            box-shadow:
+                0 2px 8px rgba(90, 74, 58, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                0 0 0 1px rgba(139, 105, 60, 0.1);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #d4c4a8;
+        }
+
+        .calendar-header h2 {
+            color: #5a4a3a;
+            font-size: 1.6rem;
+            font-weight: 500;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        .calendar-nav button {
+            background: #8b6f47;
+            color: #f5ede0;
+            border: 1px solid #6d5635;
+            padding: 8px 16px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-family: 'Nanum Myeongjo', 'Georgia', 'Times New Roman', serif;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(90, 74, 58, 0.2);
+        }
+
+        .calendar-nav button:hover {
+            background: #6d5635;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(90, 74, 58, 0.3);
+        }
+
+        .calendar-nav button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(90, 74, 58, 0.2);
+        }
+
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .weekday {
+            text-align: center;
+            font-weight: 600;
+            color: #8b6f47;
+            padding: 10px;
+            font-size: 0.95rem;
+        }
+
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            font-size: 1rem;
+            color: #5a4a3a;
+        }
+
+        .day:not(.empty):hover {
+            background: #d4c4a8;
+            color: #3d3226;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(90, 74, 58, 0.2);
+        }
+
+        .day.today {
+            background: #8b6f47;
+            color: #f5ede0;
+            font-weight: bold;
+            box-shadow: 0 2px 6px rgba(90, 74, 58, 0.3);
+        }
+
+        .day.empty {
+            cursor: default;
+        }
+
+        .day.has-quote {
+            background: #ebe0cd;
+            border: 1px solid #d4c4a8;
+        }
+
+        .day.has-quote:hover {
+            background: #dccfb8;
+            border-color: #c9b896;
+        }
+
+        .quote-popup {
+            position: fixed;
+            background: #f5ede0;
+            border: 2px solid #8b6f47;
+            border-radius: 2px;
+            padding: 20px;
+            max-width: 400px;
+            box-shadow: 0 4px 12px rgba(90, 74, 58, 0.3);
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-family: 'Nanum Myeongjo', 'Georgia', 'Times New Roman', serif;
+        }
+
+        .quote-popup.show {
+            opacity: 1;
+        }
+
+        .popup-quote {
+            font-size: 1rem;
+            color: #3d3226;
+            margin-bottom: 10px;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .popup-author {
+            text-align: right;
+            font-weight: 500;
+            color: #5a4a3a;
+            font-size: 0.9rem;
+        }
+
+        .popup-author::before {
+            content: '— ';
+        }
+
+        .popup-date {
+            text-align: center;
+            color: #8b6f47;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #d4c4a8;
+            padding-bottom: 8px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>오늘의 명언</h1>
+
+        <div class="quote-container">
+            <div class="quote-text" id="quoteText"></div>
+            <div class="quote-author" id="quoteAuthor"></div>
+        </div>
+
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <h2 id="calendarTitle"></h2>
+                <div class="calendar-nav">
+                    <button id="prevMonth">◀ 이전</button>
+                    <button id="nextMonth">다음 ▶</button>
+                </div>
+            </div>
+            <div class="calendar-weekdays">
+                <div class="weekday">일</div>
+                <div class="weekday">월</div>
+                <div class="weekday">화</div>
+                <div class="weekday">수</div>
+                <div class="weekday">목</div>
+                <div class="weekday">금</div>
+                <div class="weekday">토</div>
+            </div>
+            <div class="calendar-days" id="calendarDays"></div>
+        </div>
+    </div>
+
+    <div class="quote-popup" id="quotePopup">
+        <div class="popup-date" id="popupDate"></div>
+        <div class="popup-quote" id="popupQuote"></div>
+        <div class="popup-author" id="popupAuthor"></div>
+    </div>
+
+    <script>
+        // 명언 데이터베이스 (동서양 포함)
+        const quotes = [
+            { text: "천 리 길도 한 걸음부터", author: "노자" },
+            { text: "아는 것을 안다 하고 모르는 것을 모른다 하는 것이 진정한 앎이다", author: "공자" },
+            { text: "하늘은 스스로 돕는 자를 돕는다", author: "벤자민 프랭클린" },
+            { text: "삶이 있는 한 희망은 있다", author: "키케로" },
+            { text: "산다는 것, 그것은 치열한 전투이다", author: "로망 롤랑" },
+            { text: "행복은 습관이다. 그것을 몸에 지니라", author: "허버드" },
+            { text: "고통이 남기고 간 뒤를 보라, 고난이 지나면 반드시 기쁨이 스며든다", author: "괴테" },
+            { text: "네 자신을 알라", author: "소크라테스" },
+            { text: "인생은 짧고 예술은 길다", author: "히포크라테스" },
+            { text: "꿈을 계속 간직하고 있으면 반드시 실현할 때가 온다", author: "헬렌 켈러" },
+            { text: "먼저 자신을 비웃어라. 다른 사람이 당신을 비웃기 전에", author: "엘사 맥스웰" },
+            { text: "시간은 금이다", author: "벤자민 프랭클린" },
+            { text: "나는 생각한다. 고로 존재한다", author: "데카르트" },
+            { text: "행동은 모든 성공의 기초이다", author: "파블로 피카소" },
+            { text: "진정한 용기는 두려움에도 불구하고 행동하는 것이다", author: "넬슨 만델라" },
+            { text: "실패는 성공의 어머니다", author: "토마스 에디슨" },
+            { text: "당신이 할 수 있다고 믿든 할 수 없다고 믿든 당신이 옳다", author: "헨리 포드" },
+            { text: "미래를 예측하는 가장 좋은 방법은 그것을 창조하는 것이다", author: "피터 드러커" },
+            { text: "삶을 사는 데는 단 두 가지 방법이 있다. 하나는 기적이 없다고 생각하는 것이고 다른 하나는 모든 것이 기적이라고 생각하는 것이다", author: "알버트 아인슈타인" },
+            { text: "자신의 삶을 주도하면서 끝을 생각하며 시작하라", author: "스티븐 코비" },
+            { text: "만약 우리가 할 수 있는 일을 모두 한다면 우리는 우리 자신에게 깜짝 놀랄 것이다", author: "토마스 에디슨" },
+            { text: "성공은 최종적인 것이 아니며 실패는 치명적인 것이 아니다. 중요한 것은 계속할 용기다", author: "윈스턴 처칠" },
+            { text: "가장 큰 위험은 위험 없는 삶이다", author: "스티븐 코비" },
+            { text: "배움에는 끝이 없다", author: "맹자" },
+            { text: "하루를 헛되이 보내지 말라. 청춘은 다시 오지 않는다", author: "이순신" },
+            { text: "위대한 일을 하려면 행동하는 것뿐만 아니라 꿈을 꾸는 것도 필요하다", author: "아나톨 프랑스" },
+            { text: "노력하는 사람은 희망을 말하고, 게으른 사람은 불만을 말한다", author: "이솝" },
+            { text: "살아있는 것은 모두 변한다. 변하지 않는 것은 죽어있는 것이다", author: "붓다" },
+            { text: "기회는 준비된 자에게만 온다", author: "루이 파스퇴르" },
+            { text: "오늘 할 일을 내일로 미루지 말라", author: "벤자민 프랭클린" },
+            { text: "인생에서 가장 슬픈 세 가지는, 할 수 있었는데, 해야 했는데, 했어야 했는데다", author: "루이스 E. 본" },
+            { text: "우리의 최대의 영광은 한 번도 실패하지 않음이 아니라 실패할 때마다 다시 일어서는 데 있다", author: "공자" },
+            { text: "좋은 일을 하는 것은 좋은 기분을 느끼는 가장 확실한 방법이다", author: "윌리엄 제임스" },
+            { text: "당신이 인생의 주인공이기 때문이다", author: "스티브 잡스" },
+            { text: "계단을 밟지 않고는 어떤 높은 곳에도 올라갈 수 없다", author: "니체" },
+            { text: "문제는 목적지에 얼마나 빨리 가는가가 아니라 그 목적지가 어디인가이다", author: "메이벨 뉴컴버" },
+            { text: "당신이 할 수 있다고 생각하든 할 수 없다고 생각하든 당신의 생각이 맞다", author: "헨리 포드" }
+        ];
+
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+        const today = new Date();
+
+        // 날짜를 기반으로 명언을 결정하는 함수 (매일 같은 명언)
+        function getQuoteForDate(date) {
+            const dateStr = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+
+            // localStorage에서 해당 날짜의 명언 확인
+            const stored = localStorage.getItem(dateStr);
+            if (stored) {
+                return JSON.parse(stored);
+            }
+
+            // 날짜를 시드로 사용하여 랜덤 인덱스 생성
+            const seed = date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate();
+            const index = seed % quotes.length;
+            const quote = quotes[index];
+
+            // localStorage에 저장
+            localStorage.setItem(dateStr, JSON.stringify(quote));
+
+            return quote;
+        }
+
+        // 오늘의 명언 표시
+        function displayTodayQuote() {
+            const quote = getQuoteForDate(today);
+            document.getElementById('quoteText').textContent = quote.text;
+            document.getElementById('quoteAuthor').textContent = quote.author;
+        }
+
+        // 달력 렌더링
+        function renderCalendar() {
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startingDayOfWeek = firstDay.getDay();
+
+            document.getElementById('calendarTitle').textContent =
+                `${currentYear}년 ${currentMonth + 1}월`;
+
+            const calendarDays = document.getElementById('calendarDays');
+            calendarDays.innerHTML = '';
+
+            // 빈 셀 추가
+            for (let i = 0; i < startingDayOfWeek; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'day empty';
+                calendarDays.appendChild(emptyDay);
+            }
+
+            // 날짜 셀 추가
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'day';
+                dayElement.textContent = day;
+
+                const date = new Date(currentYear, currentMonth, day);
+
+                // 오늘 날짜 표시
+                if (date.getFullYear() === today.getFullYear() &&
+                    date.getMonth() === today.getMonth() &&
+                    date.getDate() === today.getDate()) {
+                    dayElement.classList.add('today');
+                }
+
+                // 과거 날짜는 명언이 있음을 표시
+                if (date <= today) {
+                    dayElement.classList.add('has-quote');
+
+                    // 호버 이벤트
+                    dayElement.addEventListener('mouseenter', (e) => {
+                        const quote = getQuoteForDate(date);
+                        showQuotePopup(e, date, quote);
+                    });
+
+                    dayElement.addEventListener('mouseleave', () => {
+                        hideQuotePopup();
+                    });
+                }
+
+                calendarDays.appendChild(dayElement);
+            }
+        }
+
+        // 명언 팝업 표시
+        function showQuotePopup(event, date, quote) {
+            const popup = document.getElementById('quotePopup');
+            const dateStr = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
+
+            document.getElementById('popupDate').textContent = dateStr;
+            document.getElementById('popupQuote').textContent = `"${quote.text}"`;
+            document.getElementById('popupAuthor').textContent = `- ${quote.author}`;
+
+            // 팝업 위치 설정
+            const rect = event.target.getBoundingClientRect();
+            popup.style.left = `${rect.left + window.scrollX}px`;
+            popup.style.top = `${rect.bottom + window.scrollY + 10}px`;
+
+            // 화면 밖으로 나가지 않도록 조정
+            setTimeout(() => {
+                const popupRect = popup.getBoundingClientRect();
+                if (popupRect.right > window.innerWidth) {
+                    popup.style.left = `${window.innerWidth - popupRect.width - 20}px`;
+                }
+                if (popupRect.bottom > window.innerHeight) {
+                    popup.style.top = `${rect.top + window.scrollY - popupRect.height - 10}px`;
+                }
+            }, 0);
+
+            popup.classList.add('show');
+        }
+
+        // 명언 팝업 숨기기
+        function hideQuotePopup() {
+            document.getElementById('quotePopup').classList.remove('show');
+        }
+
+        // 이전/다음 달 이동
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar();
+        });
+
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar();
+        });
+
+        // 초기화
+        displayTodayQuote();
+        renderCalendar();
+    </script>
+</body>
+</html>
